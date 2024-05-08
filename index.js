@@ -1,8 +1,7 @@
-class Shape {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+const CLI = require('./lib/cli.js');
+
+const cli = new CLI();
+
+cli.run();
 
 
