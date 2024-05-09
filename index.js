@@ -9,7 +9,7 @@ const questions = () => {
             {
                 type: 'input',
                 name: 'text',
-                message: 'Please enter the text for your logo.',
+                message: 'Please enter up to 3 characters for your logo.',
             },
             {
                 type: 'input',
@@ -29,13 +29,13 @@ const questions = () => {
 function chooseShape(userShape, userColor) {
     if (userShape === 'circle') {
         const circle = new Circle(userColor);
-        circle.render();
+        return circle.render();
     } else if (userShape === 'square') {
         const square = new Square(userColor);
-        square.render();
+         return square.render();
     } else {
         const triangle = new Triangle(userColor);
-        triangle.render();
+        return triangle.render();
     }
 };
 
@@ -43,8 +43,8 @@ function chooseShape(userShape, userColor) {
 function generateSVG({text, color, shape}) {
     return ` <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
     ${chooseShape(shape, color)}
-  <text x="50" y="50" text-anchor="middle" fill="white">${text}</text>
-</svg>`;
+    <text x="50" y="60" text-anchor="middle" fill="white" font-size="25">${text}</text>
+    </svg>`;
 };
 
 // function to write file
@@ -57,7 +57,8 @@ function writeToFile(fileName, data) {
 // function to initialize app
 function init() {
     questions()
-        .then((response) => writeToFile(`${response.text}.svg`, generateSVG(response)))
+        .then(
+            (response) => writeToFile(`${response.text}.svg`, generateSVG(response)))
         .catch((err) => console.error(err));
 }
 // function call to initialize app
