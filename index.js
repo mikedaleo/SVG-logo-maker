@@ -13,14 +13,19 @@ const questions = () => {
             },
             {
                 type: 'input',
-                name: 'color',
-                message: 'What color would you like your logo to be? (color keyword or hex number)',
+                name: 'textColor',
+                message: 'Please enter a color for the text of your logo. (color keyword or hex number)',
             },
             {
                 type: 'list',
                 name: 'shape',
-                message: 'What shape would you like your logo to be?',
+                message: 'Please select a shape.',
                 choices: ['circle', 'triangle', 'square'],
+            },
+            {
+                type: 'input',
+                name: 'shapeColor',
+                message: 'Please enter a color for the shape. (color keyword or hex number)',
             },
         ]);
 }
@@ -32,7 +37,7 @@ function chooseShape(userShape, userColor) {
         return circle.render();
     } else if (userShape === 'square') {
         const square = new Square(userColor);
-         return square.render();
+        return square.render();
     } else {
         const triangle = new Triangle(userColor);
         return triangle.render();
@@ -40,25 +45,36 @@ function chooseShape(userShape, userColor) {
 };
 
 // function to generate SVG text
-function generateSVG({text, color, shape}) {
-    return ` <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-    ${chooseShape(shape, color)}
-    <text x="50" y="60" text-anchor="middle" fill="white" font-size="25">${text}</text>
+function generateSVG({ text, textColor, shape, shapeColor}) {
+    return ` <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+    ${chooseShape(shape, shapeColor)}
+    <text x="50" y="60" text-anchor="middle" fill="${textColor}" font-size="25">${text}</text>
     </svg>`;
 };
 
 // function to write file
 function writeToFile(fileName, data) {
     fs.writeFile(fileName, data, (err) => {
-        err ? console.error(err) : console.log('Your Logo has been created!');
+        err ? console.error(err) : console.log(`Generated logo.svg!`);
     })
 }
+
+// function to validate text
+function validateText(text) {
+    if (text.length > 3) {
+        throw new Error('Please enter only up to 3 characters.');
+    }
+};
 
 // function to initialize app
 function init() {
     questions()
         .then(
-            (response) => writeToFile(`${response.text}.svg`, generateSVG(response)))
+            (response) => {
+                validateText(response.text)
+
+                writeToFile(`${response.text}-logo.svg`, generateSVG(response))}
+            )
         .catch((err) => console.error(err));
 }
 // function call to initialize app
