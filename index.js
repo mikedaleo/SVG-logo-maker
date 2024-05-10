@@ -73,7 +73,7 @@ function init() {
             (response) => {
                 validateText(response.text)
 
-                writeToFile(`${response.text}-logo.svg`, generateSVG(response))}
+                writeToFile(`./examples/${response.text}-logo.svg`, generateSVG(response))}
             )
         .catch((err) => console.error(err));
 }
